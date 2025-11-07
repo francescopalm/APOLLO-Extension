@@ -1,0 +1,132 @@
+/* Stile base e font */
+body {
+    /* 3. Use Roboto Font */
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f6; /* Very light background */
+    color: #333;
+    padding: 20px;
+    margin: 0;
+    min-width: 450px;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* --- Header and Titles --- */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    color: #4A90E2; /* Primary blue color */
+    font-weight: 700; /* Heavier weight for title */
+    margin: 0 0 5px 0;
+}
+
+h2 {
+    font-weight: 500;
+    color: #4A90E2;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+/* --- Sections (Card) --- */
+.section-card {
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Light shadow */
+}
+
+/* --- Form Fields --- */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.input-field,
+.select-field {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+    font-size: 1em;
+    font-family: inherit; /* Inherit Roboto */
+    transition: border-color 0.3s;
+}
+
+.input-field:focus,
+.select-field:focus {
+    border-color: #4A90E2; 
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* --- Inline Groups (for side-by-side selects) --- */
+.form-group-inline {
+    display: flex;
+    gap: 20px; 
+    margin-bottom: 20px;
+}
+
+.input-group {
+    flex: 1; 
+}
+
+/* --- Buttons --- */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-right: 10px;
+    /* 4. Removed transition for hover speed */
+}
+
+.btn:last-child {
+    margin-right: 0;
+}
+
+.btn-primary {
+    background-color: #4A90E2;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #387ac6;
+}
+
+.btn-secondary {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #ccc;
+}
+
+/* --- Status Messages --- */
+.status-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-style: italic;
+    color: #007bff;
+    min-height: 20px;
+}

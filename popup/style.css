@@ -1,0 +1,145 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#option-container {
+    align-self: flex-end;
+    margin: 10px 5px 0 0;
+}
+
+#options {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#options svg {
+    fill: #a1a1a1;
+}
+
+#options:hover svg {
+    fill: #525252;
+}
+
+
+
+.google-sign-in-button {
+    /* Layout Flexbox per allineare logo e testo */
+    display: flex;
+    align-items: center;
+    justify-content: space-around; /* Allinea a sinistra */
+
+    /* Stile Ufficiale */
+    width: 100%; /* Larghezza personalizzata */
+    height: 40px; /* Altezza standard */
+    background-color: #FFFFFF;
+    color: #3C4043; /* Grigio scuro */
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    
+    /* Bordo e Ombra */
+    border: 1px solid #DADCE0;
+    border-radius: 8px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.04);
+    cursor: pointer;
+    
+    /* Reset e Padding */
+    padding: 0;
+    margin: 10px 0;
+}
+
+.google-sign-in-button:hover {
+    background-color: #fafafa;
+}
+
+.icon-container {
+    /* Area del logo */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Larghezza fissa */
+    height: 100%;
+
+}
+
+.google-logo-icon {
+    /* Stile per l'icona ufficiale di Google (tipicamente 18x18px) */
+    width: 18px;
+    height: 18px; 
+    vertical-align: middle;
+
+}
+
+.button-text {
+    /* Testo "Accedi con Google" */
+    flex-grow: 1; /* Il testo occupa lo spazio rimanente */
+    text-align: left;
+    padding-right: 11px;
+
+}
+
+#signout {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 100%;
+    height: 30px;
+    background-color: #FFFFFF;
+    color: #c10007;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    
+    border: 1px solid #c10007;
+    border-radius: 8px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.04);
+    cursor: pointer;
+    
+    padding: 0;
+    margin: 10px 0;
+
+}
+
+#signout:hover {
+    background-color: #fef2f2;
+}
+
+
+#classification {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 85%;
+    height: 40px;
+    background-color: #FFFFFF;
+    color: #3C4043;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    
+    border: 1px solid #DADCE0;
+    border-radius: 8px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.04);
+    cursor: pointer;
+    
+    padding: 10px;
+    margin: 10px 0;
+
+}
+
+#classification:hover {
+    background-color: #fafafa;
+}

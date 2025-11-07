@@ -1,0 +1,39 @@
+{
+  "name": "APOLLO",
+  "description": "Advanced Phishing preventiOn with Large Language model-based Oracle",
+  "version": "1.0",
+  "manifest_version": 3,
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyFc2QsBus0zU/6/gYVzH4Uab/T8TR4ziBOPPwNU+7fKPQ7oJuZFZnhYbgpE4wXHOQ757fcNJgjDps6fGFzSp4ErPmMCzsUHscV6cY1R9pul/ggTG3gFeRjznNDmwJYWgX5GpTasIb1dLM19IzjwPTOvCfQlBnTyrnVQeh2uopME+d/h4Ef+B3Ho+K8iqrZl/ncBnnQ//0YH1iRW1ne9hYEZDlwo/sLrS2nRe3fVhmihcyS/WBRrF1/1umwX/Af6eUVpOA6WZGt0fBaM9Jqm8Tn+xbnVneM9EZX/DAoex3/a7oshZX7uPeomFWzoE8gm/Zk6/jINrX2cZSRLwoa4zjwIDAQAB",
+  "permissions": [
+    "storage",
+    "identity",
+    "tabs"
+  ],
+  "oauth2": {
+    "client_id": "937476424219-gp0dchru70bqrts9tj0g594v2momun0o.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "email",
+      "profile",
+      "openid"
+    ]
+  },
+  "action": {
+    "default_popup": "popup/hello.html"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "scripts/content.js"
+      ],
+      "matches": [
+        "https://mail.google.com/*"
+      ]
+    }
+  ],
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
+  "options_page": "options/options.html"
+}
