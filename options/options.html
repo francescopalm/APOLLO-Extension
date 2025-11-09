@@ -1,55 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>Apollo - Options</title>
-</head>
+    <meta charset="UTF-8">
+    <title>Apollo - Options</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="options.css"> </head>
 
 <body>
-  <label for="openai-apikey">OPENAI API Key</label><br>
-  <input id="openai-apikey" placeholder="Insert your OPENAI API key"></input><br>
+    <div class="container">
+        <header class="header">
+            <h1>APOLLO</h1>
+            <h2>Advanced Phishing preventiOn with Large Language model-based Oracle</h2>
+            <p>Configure your API keys and classification preferences.</p>
+        </header>
 
-  <label for="vt-apikey">Virus Total API Key</label><br>
-  <input id="vt-apikey" placeholder="Insert your Virus Total API key"></input><br>
+        <section class="section-card">
+            <h2>Service Keys</h2>
+            
+            <div class="form-group">
+                <label for="openai-apikey">OPENAI API Key</label>
+                <input id="openai-apikey" class="input-field" placeholder="Insert your OPENAI API key">
+            </div>
 
-  <label for="bd-apikey">Big Data Cloud API Key</label><br>
-  <input id="bd-apikey" placeholder="Insert your Big Data Cloud API key"></input><br>
+            <div class="form-group">
+                <label for="vt-apikey">Virus Total API Key</label>
+                <input id="vt-apikey" class="input-field" placeholder="Insert your Virus Total API key">
+            </div>
 
-  <div id="status"></div>
-  <button id="send">Send</button><br>
+            <div class="form-group">
+                <label for="bd-apikey">Big Data Cloud API Key</label>
+                <input id="bd-apikey" class="input-field" placeholder="Insert your Big Data Cloud API key">
+            </div>
+            
+            <div id="status" class="status-message"></div>
+            
+            <button id="send" class="btn btn-primary">Test and Set Keys</button>
+        </section>
 
-  <label for="time-window">Batch mail classification time window</label><br>
-  <select name="time-window" id="time-window">
-    <option value="1">1 day</option>
-    <option value="2">2 days</option>
-    <option value="3">3 days</option>
-    <option value="4">4 days</option>
-    <option value="5">5 days</option>
-    <option value="6">6 days</option>
-    <option value="7">7 days</option>
-    <option value="8">8 days</option>
-    <option value="9">9 days</option>
-    <option value="10">10 days</option>
-    <option value="11">11 days</option>
-    <option value="12">12 days</option>
-    <option value="13">13 days</option>
-    <option value="14">14 days</option>
-  </select><br>
+        <section class="section-card">
+            <h2>Classification Preferences</h2>
 
-  <label for="max-results">Max results</label><br>
-  <select name="max-results" id="max-results">
-    <option value="10">10</option>
-    <option value="20">20</option>
-    <option value="30">30</option>
-    <option value="40">40</option>
-    <option value="50">50</option>
-  </select><br>
+            <div class="form-group-inline">
+                <div class="input-group">
+                    <label for="time-window">Batch mail classification time window</label>
+                    <select name="time-window" id="time-window" class="select-field">
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5">5 days</option>
+                        <option value="6">6 days</option>
+                        <option value="7">7 days</option>
+                        <option value="8">8 days</option>
+                        <option value="9">9 days</option>
+                        <option value="10">10 days</option>
+                        <option value="11">11 days</option>
+                        <option value="12">12 days</option>
+                        <option value="13">13 days</option>
+                        <option value="14">14 days</option>
+                    </select>
+                </div>
 
-  <button id="save">Save settings</button><br>
-  <button id="clear-cache">Clear mail classification cache</button><br>
+                <div class="input-group">
+                    <label for="max-results">Max results</label>
+                    <select name="max-results" id="max-results" class="select-field">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button id="save" class="btn btn-primary">Save Settings</button>
+            <button id="clear-cache" class="btn btn-secondary">Clear Classification Cache</button>
+        </section>
+    </div>
 
-
-  <script src="options.js"></script>
+    <script src="options.js"></script>
 </body>
 
 </html>

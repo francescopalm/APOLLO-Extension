@@ -1,23 +1,40 @@
+// Global constants for element IDs
+const TOOLTIP_ID = 'phishing-alert-tooltip';
+const ALERT_OVERLAY_ID = 'apollo-alert-overlay';
+
+// --- Initialization ---
+
+// 1. Initial execution when the script loads
 window.onload = async function () {
-  console.log("Content Script loaded succesfully!");
-  injectStyles();
+    console.log("Apollo Content Script loaded.");
+    injectStyles();
 
-  // Recupero l'indirizzo mail dell'account loggato in Gmail
-  const gmail_account = getGmailAccountFromTab();
-  const { status } = await chrome.runtime.sendMessage({ action: "checkServiceWorker", data: gmail_account });
-  console.log(status);
+    // Retrieve the active Gmail account email address
+    const gmailAccount = getGmailAccountFromTab();
+    
+    // Notify the Service Worker that the content script is ready
+    // This also triggers the initial OAuth status check
+    try {
+        const { status } = await chrome.runtime.sendMessage({ action: "checkServiceWorker", data: gmailAccount });
+        console.log("Initial OAuth Status:", status);
+    } catch (error) {
+        console.warn("Service Worker might be starting. Message failed:", error.message);
+    }
+};
 
-}
-
+/**
+ * Injects all dynamic CSS rules required for tooltips and alerts
+ * into the document's <head> once.
+ */
 function injectStyles() {
-    const styleId = 'phishing-tooltip-styles';
-    if (document.getElementById(styleId)) return; // Evita duplicati
+    const STYLE_ID = 'apollo-phishing-styles';
+    if (document.getElementById(STYLE_ID)) return; // Avoid duplicates
 
     const style = document.createElement('style');
-    style.id = styleId;
+    style.id = STYLE_ID;
     style.textContent = `
-        /* Regole Tooltip */
-        #phishing-alert-tooltip {
+        /* --- Tooltip (Medium Risk) Styles --- */
+        #${TOOLTIP_ID} {
           display: flex;
           position: absolute; 
           background: #fff;
@@ -29,48 +46,137 @@ function injectStyles() {
           border-color: #b80000;
           box-shadow: 0 2px 5px rgba(0,0,0,0.2);
           z-index: 10000;
-          pointer-events: none; /* Non blocca gli eventi mouse sul link sottostante */
+          pointer-events: none;
           white-space: pre-wrap;
         }
 
-        /* Regole Freccetta (Triangolino) */
-        #phishing-alert-tooltip::before {
+        #${TOOLTIP_ID}::before {
             content: "";
             position: absolute;
-            
-            /* Il tooltip appare SOTTO il link, quindi il triangolino deve puntare VERSO l'ALTO */
-            top: -10px; /* Sposta 10px sopra il bordo */
+            top: -10px;
             left: 5%; 
             transform: translateX(-50%); 
-            
             width: 0;
             height: 0;
-            /* Crea il triangolo puntando in alto */
             border-left: 10px solid transparent;
             border-right: 10px solid transparent;
             border-bottom: 10px solid #b80000;
+        }
+        
+        #${TOOLTIP_ID} .tooltip-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 150%;
+        }
+
+        #${TOOLTIP_ID} .tooltip-icon {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Phishing Alert (High Risk) Styles --- */
+        #${ALERT_OVERLAY_ID} {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+        }
+        .apollo-alert-box {
+            background-color: #b80000;
+            color: white;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 80%;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            font-family: 'Roboto', Inter, sans-serif;
+            text-align: left;
+        }
+        .apollo-alert-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 5px;
+            border-bottom: 1px solid #fff;
+            padding: 10px 25px;
+        }
+        .apollo-alert-header h1 {
+            font-size: 26px;
+            font-weight: bold; /* Ensure h1 is bold */
+            color: white; /* Ensure color override */
+        }
+        .apollo-alert-icon {
+            margin: auto 0;
+        }
+        .apollo-alert-icon svg {
+            width: 36px;
+            height: 36px;
+        }
+        .apollo-alert-body {
+            padding: 10px 25px;
+            font-size: 17px;
+            line-height: 1.8;
+        }
+        .apollo-alert-body hr {
+            width: 96%;
+            color: #fff;
+        }
+        .apollo-alert-actions {
+            display: flex;
+            align-items: center;
+            padding: 25px 25px;
+        }
+        .apollo-alert-details {
+            display: none; /* Hidden by default */
+            padding-bottom: 10px;
+        }
+        .apollo-alert-details p {
+            padding: 0 25px;
+            font-size: 17px;
+            line-height: 1.8;
+        }
+        .apollo-alert-details a {
+            color: white; /* Ensure link color matches */
+        }
+        .apollo-btn {
+            padding: 13px 23px;
+            font-weight: 500;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .apollo-btn-primary {
+            background-color: white;
+            color: #b80000;
+        }
+        .apollo-btn-secondary {
+            text-decoration: underline;
+            padding: 0;
+            color: #fff;
+            background-color: transparent;
         }
     `;
     document.head.appendChild(style);
 }
 
-const TOOLTIP_ID = 'phishing-alert-tooltip';
+// --- Global SVG Icon Definition (for Tooltip and Alert) ---
 
-// 3️⃣ Crea il contenitore <div> dell'SVG
+// Create the shared SVG warning icon definition
+const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const iconContainer = document.createElement("div");
-iconContainer.style.margin = "auto 0";
-
-// 4️⃣ Crea l'SVG con il namespace corretto
-const svgNS = "http://www.w3.org/2000/svg";
-const svg = document.createElementNS(svgNS, "svg");
-svg.setAttribute("xmlns", svgNS);
+const svg = document.createElementNS(SVG_NAMESPACE, "svg");
+svg.setAttribute("xmlns", SVG_NAMESPACE);
 svg.setAttribute("viewBox", "0 0 20 20");
 svg.setAttribute("fill", "currentColor");
-svg.style.width = "36px";
-svg.style.height = "36px";
 
-// 5️⃣ Crea il path interno
-const path = document.createElementNS(svgNS, "path");
+const path = document.createElementNS(SVG_NAMESPACE, "path");
 path.setAttribute("fill-rule", "evenodd");
 path.setAttribute(
   "d",
@@ -78,47 +184,36 @@ path.setAttribute(
 );
 path.setAttribute("clip-rule", "evenodd");
 
-// 6️⃣ Inserisci il path dentro l'SVG e l'SVG nel contenitore
 svg.appendChild(path);
 iconContainer.appendChild(svg);
 
-function showTooltip(targetElement) {
+// --- Tooltip Functions (Medium Risk) ---
 
+function showTooltip(targetElement) {
     const tooltip = document.createElement('div');
     tooltip.id = TOOLTIP_ID;
     
     const tooltipContent = document.createElement('div');
-    // Formatta il messaggio nel tooltip, effettuando un troncamento nel caso di lunghezza > 50 caratteri
+    tooltipContent.className = 'tooltip-content'; // Apply style from injectStyles
+    
     const MAX_CHAR_LENGTH = 50;
     let linkDisplayed = targetElement.href;
-    if(linkDisplayed.length > 50){
-      linkDisplayed = linkDisplayed.substring(0, 50)  + '...';
+    if (linkDisplayed.length > MAX_CHAR_LENGTH) {
+      linkDisplayed = linkDisplayed.substring(0, MAX_CHAR_LENGTH) + '...';
     }
-    tooltipContent.innerHTML = `FAKE WEBSITE, DON'T CLICK!\nLink goes to:\n<u>${linkDisplayed}</u>`;
+    tooltipContent.innerHTML = `FAKE WEBSITE, DON'T CLICK!<br>Link goes to:<br><u>${linkDisplayed}</u>`;
     
-    // Stile CSS
-
-
-    tooltipContent.style.cssText = `
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        line-height: 150%;
-    `
-
-    iconContainer.style.cssText = `
-        display: flex;
-        flex-direction: column;
-    `
+    // Clone the global icon to prevent conflicts
+    const iconClone = iconContainer.cloneNode(true);
+    iconClone.className = 'tooltip-icon'; // Apply style from injectStyles
     
-    // Posizionamento sotto il link
+    // Position the tooltip
     const rect = targetElement.getBoundingClientRect();
     tooltip.style.left = (rect.left + window.scrollX) + 'px';
     tooltip.style.top = (rect.bottom + window.scrollY + 5) + 'px';
 
-    tooltip.appendChild(iconContainer);
+    tooltip.appendChild(iconClone);
     tooltip.appendChild(tooltipContent);
-
     document.body.appendChild(tooltip);
 }
 
@@ -129,232 +224,132 @@ function hideTooltip() {
     }
 }
 
-function getGmailAccountFromTab() {
-  const meta = document.getElementsByTagName("meta")[0];
-  return meta.content;
-}
+// --- Phishing Alert Functions (High Risk) ---
 
-function attachPhishingProtection(explanation, phishing_probability) {
-  const mailBody = document.querySelector("div.a3s"); // seleziono il corpo della mail
-  if (!mailBody) return;
+/**
+ * Attaches the correct protection logic based on the phishing probability value.
+ * @param {object} explanation - The explanation object from the API.
+ * @param {number} phishingProbability - The phishing probability (0 to 100).
+ */
+function attachPhishingProtection(explanation, phishingProbability) {
+  const emailBody = document.querySelector("div.a3s"); // Gmail's main body selector
+  if (!emailBody) return;
 
-  const links = mailBody.querySelectorAll("a[href]"); //seleziono tutti i link presenti nel body
+  const links = emailBody.querySelectorAll("a[href]");
 
-  // Se nella mail non ci sono link, visualizza il warning alla sua apertura
-  if (links.length == 0) {
+  // If no links, show the alert immediately.
+  if (links.length === 0) {
     showPhishingAlert(explanation);
-  // Altrimenti, se phishing_probability è compreso tra 30 e 70, sarà visualizzato il tooltip al passaggio del mouse.
-  } else if (phishing_probability >= 30 && phishing_probability <= 70) {
+  
+  // If medium risk (30-70), attach hover tooltips.
+  } else if (phishingProbability >= 30 && phishingProbability <= 70) {
     links.forEach(link => {
-            // Evita listener multipli se la funzione viene chiamata più volte
             if (!link.classList.contains('phishing-medium-risk')) {
-                
-                // Funzione per mostrare il tooltip
                 const tooltip = (e) => showTooltip(e.currentTarget);
-                
-                // Aggiungi i listener
                 link.addEventListener('mouseover', tooltip);
                 link.addEventListener('mouseout', hideTooltip);
-                
                 link.classList.add('phishing-medium-risk');
             }
         });
-    // Altrimenti il warning sarà visualizzato al clic sul link all'interno della mail
+  // Otherwise (high risk), attach click-intercepting alerts.
   } else {
     links.forEach(link => {
-      link.addEventListener("click", (e) => {
-        const url = e.currentTarget.href;
-        e.preventDefault();
-        e.stopPropagation();
-        showPhishingAlert(explanation, url)
-      });
+      // Use a class to prevent duplicate listeners
+      if (!link.classList.contains('phishing-high-risk')) {
+        link.addEventListener("click", (e) => {
+            const url = e.currentTarget.href;
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(explanation, url);
+            showPhishingAlert(explanation, url);
+        });
+        link.classList.add('phishing-high-risk');
+      }
     });
   }
-
-
 }
 
+/**
+ * Creates and displays the full-screen phishing alert modal.
+ * @param {object} explanation - The explanation object.
+ * @param {string} [url] - The dangerous URL (if a link was clicked).
+ */
 function showPhishingAlert(explanation, url) {
-  // se già presente, non duplicarlo
-  if (document.getElementById("phishing-alert-overlay")) return;
+  // Prevent duplicate overlays
+  if (document.getElementById(ALERT_OVERLAY_ID)) return;
 
-
-  // overlay nero semi-trasparente
+  // Create elements and assign classes (styles are in injectStyles)
   const overlay = document.createElement("div");
-  overlay.id = "phishing-alert-overlay";
-  overlay.style.position = "fixed";
-  overlay.style.top = "0";
-  overlay.style.left = "0";
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-  overlay.style.display = "flex";
-  overlay.style.justifyContent = "center";
-  overlay.style.alignItems = "center";
-  overlay.style.zIndex = "999999";
+  overlay.id = ALERT_OVERLAY_ID;
 
-
-  // box rosso centrale
   const box = document.createElement("div");
-  box.style.backgroundColor = "#b80000"; // rosso avviso Chrome
-  box.style.color = "white";
-  //box.style.padding = "30px";
-  box.style.borderRadius = "12px";
-  box.style.maxWidth = "700px";
-  box.style.width = "80%";
-  box.style.position = "relative";
-  box.style.boxShadow = "0 4px 12px rgba(0,0,0,0.4)";
-  box.style.fontFamily = "Inter, sans-serif";
-  box.style.textAlign = "left";
+  box.className = "apollo-alert-box";
 
+  // Header
+  const wrapper = document.createElement("div");
+  wrapper.className = "apollo-alert-header";
 
-  // titolo
+  const iconClone = iconContainer.cloneNode(true);
+  iconClone.className = "apollo-alert-icon";
+  
   const title = document.createElement("h1");
-  title.style.fontSize = "26px";
   title.textContent = "Deceptive website ahead";
 
-  // 2️⃣ Crea il wrapper per allineare titolo + icona
-  const wrapper = document.createElement("div");
-  wrapper.style.display = "flex";
-  wrapper.style.alignItems = "flex-start";
-  wrapper.style.gap = "5px"; // piccolo spazio tra icona e testo
-  wrapper.style.borderBottomStyle = "solid";
-  wrapper.style.borderBottomWidth = "1px";
-  wrapper.style.borderBottomColor = "#fff";
-  wrapper.style.padding = "10px 25px";
-
-  // 3️⃣ Crea il contenitore <div> dell'SVG
-  const iconContainer = document.createElement("div");
-  iconContainer.style.margin = "auto 0";
-
-  // 4️⃣ Crea l'SVG con il namespace corretto
-  const svgNS = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("xmlns", svgNS);
-  svg.setAttribute("viewBox", "0 0 20 20");
-  svg.setAttribute("fill", "currentColor");
-  svg.style.width = "36px";
-  svg.style.height = "36px";
-
-  // 5️⃣ Crea il path interno
-  const path = document.createElementNS(svgNS, "path");
-  path.setAttribute("fill-rule", "evenodd");
-  path.setAttribute(
-    "d",
-    "M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-  );
-  path.setAttribute("clip-rule", "evenodd");
-
-  // 6️⃣ Inserisci il path dentro l'SVG e l'SVG nel contenitore
-  svg.appendChild(path);
-  iconContainer.appendChild(svg);
-
-  // 7️⃣ Inserisci icona e titolo nel wrapper
-  wrapper.appendChild(iconContainer);
+  wrapper.appendChild(iconClone);
   wrapper.appendChild(title);
 
-
-  // messaggio dinamico
+  // Body
   const feature = document.createElement("div");
-
-
-  //const subtitle = document.createElement("h2");
-  //subtitle.textContent = explanation.feature;
-  //subtitle.style.fontSize = "16px";
-  //subtitle.style.marginBottom = "0";
-
+  feature.className = "apollo-alert-body";
+  
   const msg = document.createElement("p");
   msg.textContent = explanation.explanation;
-  msg.style.padding = "10px 25px";
-  msg.style.fontSize = "17px";
-  msg.style.lineHeight = "1.8";
+  
+  const divider = document.createElement("hr");
 
-
-  const divider = document.createElement("hr")
-  divider.style.width = "96%";
-  divider.style.color = "#fff";
-
-
-
-  //feature.appendChild(subtitle);
   feature.appendChild(msg);
   feature.appendChild(divider);
 
-
-
-
-  // contenitore bottoni
+  // Actions
   const actions = document.createElement("div");
-  actions.style.display = "flex";
-  actions.style.alignItems = "center";
-  if (url) {
-    actions.style.justifyContent = "space-between";
-  } else {
-    actions.style.justifyContent = "end";
-  }
-  actions.style.padding = "25px 25px"
-
-
-
-  // pulsante "Back to safety"
+  actions.className = "apollo-alert-actions";
+  
   const okBtn = document.createElement("button");
   okBtn.textContent = "Back to safety";
-  okBtn.style.padding = "13px 23px";
-  okBtn.style.fontWeight = "500";
-  okBtn.style.fontSize = "16px";
-  okBtn.style.backgroundColor = "white";
-  okBtn.style.color = "#b80000";
-  okBtn.style.border = "none";
-  okBtn.style.borderRadius = "10px";
-  okBtn.style.cursor = "pointer";
+  okBtn.className = "apollo-btn apollo-btn-primary";
   okBtn.onclick = () => overlay.remove();
 
-  // pulsante "Show details"
-  const detailsBtn = document.createElement("button");
-  detailsBtn.textContent = "Show details";
-  detailsBtn.style.textDecoration = "underline";
-  detailsBtn.style.padding = "0";
-  detailsBtn.style.fontWeight = "500";
-  detailsBtn.style.fontSize = "16px";
-  detailsBtn.style.color = "#fff";
-  detailsBtn.style.backgroundColor = "transparent";
-  detailsBtn.style.border = "none";
-  detailsBtn.style.cursor = "pointer";
-  detailsBtn.onclick = () => {
-    if (visitWebsite.style.display == "none") {
-      visitWebsite.style.display = "block"; // Mostra il div
-      detailsBtn.textContent = "Hide details";
-    }
-    else {
-      visitWebsite.style.display = "none"; // Nasconde il div
-      detailsBtn.textContent = "Show details";
-    }
+  actions.appendChild(okBtn); // "Back to safety" is always added
 
-  };
+  // Details & Advanced (Only if a URL is provided)
+  const visitWebsite = document.createElement("div");
+  visitWebsite.className = "apollo-alert-details";
 
   if (url) {
-    actions.appendChild(detailsBtn);
+    const detailsBtn = document.createElement("button");
+    detailsBtn.textContent = "Show details";
+    detailsBtn.className = "apollo-btn apollo-btn-secondary";
+    detailsBtn.onclick = () => {
+        const computedStyle = window.getComputedStyle(visitWebsite);
+        const isHidden = computedStyle.getPropertyValue('display') === 'none';
+        visitWebsite.style.display = isHidden ? "block" : "none";
+        detailsBtn.textContent = isHidden ? "Hide details" : "Show details";
+    };
+
+    const continueMsg = document.createElement("p");
+    continueMsg.innerHTML = `Click <a href="${url}" target="_blank">here</a> (not safe) to visit the linked website.`;
+    
+    visitWebsite.appendChild(continueMsg);
+    
+    // Adjust action layout
+    actions.style.justifyContent = "space-between";
+    actions.prepend(detailsBtn); // Add details button before 'okBtn'
+  } else {
+    // If no URL, just justify the 'okBtn' to the end
+    actions.style.justifyContent = "flex-end";
   }
-  actions.appendChild(okBtn);
 
-
-  // contenitore nascosto "click here (not safe) to visit"
-  const visitWebsite = document.createElement("div");
-  visitWebsite.id = "div-advanced";
-  visitWebsite.style.display = "none";
-  visitWebsite.style.paddingBottom = "10px";
-
-
-  const continueMsg = document.createElement("p");
-  continueMsg.innerHTML = `Click <a href="${url}" target="_blank" style="color: white">here</a> (not safe) to visit the linked website.`;
-  continueMsg.style.padding = "0 25px";
-  continueMsg.style.fontSize = "17px";
-  continueMsg.style.lineHeight = "1.8";
-
-  visitWebsite.appendChild(continueMsg);
-
-
-  // monta tutto
+  // Assemble the modal
   box.appendChild(wrapper);
   box.appendChild(feature);
   box.appendChild(actions);
@@ -365,119 +360,123 @@ function showPhishingAlert(explanation, url) {
   document.body.appendChild(overlay);
 }
 
+// --- Classification Logic Functions ---
 
+/**
+ * Checks if the extension is authenticated and ready.
+ * @returns {Promise<boolean>} True if the token is valid.
+ */
 async function isDelphiRunning() {
-  return new Promise((resolve, reject) => {
-
+  return new Promise((resolve) => {
     chrome.runtime.sendMessage({ action: "getOAuthStatus" }, (response) => {
-
-      // Gestione errori di comunicazione
       if (chrome.runtime.lastError) {
-        console.error("Errore di comunicazione con il background:", chrome.runtime.lastError.message);
-        return resolve(false); // Considera l'estensione non in esecuzione
+        console.error("Communication error with background:", chrome.runtime.lastError.message);
+        return resolve(false); // Assume not running
       }
-
-      // Risposta ricevuta (funzione di callback originale)
-      if (response && response.oauthStatus === "VALID TOKEN") {
-        resolve(true); // Risolve la Promise a 'true'
-      } else {
-        resolve(false); // Risolve la Promise a 'false'
-      }
+      resolve(response && response.oauthStatus === "VALID TOKEN");
     });
-
   });
 }
-// Avvia l’osservazione del DOM di Gmail
-const observer = new MutationObserver(async (mutationsList) => {
 
+/**
+ * Starts the classification process by sending the message ID to the Service Worker.
+ * @param {string} messageID - The Gmail message ID.
+ */
+function startClassification(messageID) {
+    chrome.runtime.sendMessage({ action: "sendMessageID", data: messageID }, (response) => {
+        if (chrome.runtime.lastError) {
+            console.error("Failed to get classification:", chrome.runtime.lastError.message);
+            return;
+        }
+        if (response.error) {
+            console.error("Analysis Error:", response.error);
+            return;
+        }
+        showResult(response.result);
+    });
+}
+
+/**
+ * Displays the classification result (label) in the Gmail UI.
+ * @param {object} result - The analysis result from the Service Worker.
+ */
+function showResult(result) {
+    const label = document.createElement('span');
+    label.style.marginLeft = '8px';
+    label.style.padding = "10px";
+    label.style.textAlign = "center";
+            
+    if (result.classification_result === "legit") {
+        label.style.background = "#ecfcca";
+        label.style.color = "#35530e";
+        label.textContent = 'Legit';
+    } else {
+        label.style.background = "#ffc9c9";
+        label.style.color = "#82181a";
+        label.textContent = 'Phishing';
+        label.style.fontWeight = "bold";
+
+        // If phishing, attach the necessary UI protections (alerts/tooltips)
+        attachPhishingProtection(result.feature_explain, result.phishing_probability);
+    }
+    
+    // .go is the selector for the Gmail header action bar
+    // .gD if go is not available
+    const targetElement = document.querySelector(".go") || document.querySelector(".gD");
+    targetElement?.appendChild(label);
+}
+
+// --- DOM Observers and Listeners ---
+
+// The MutationObserver watches for Gmail UI changes (e.g., opening an email)
+const observer = new MutationObserver(async (mutationsList) => {
   for (const mutation of mutationsList) {
     if (mutation.type === "childList") {
-      // Cerca l'elemento contenente il message-id da utilizzare con API Gmail
+      // Find the container that holds the message ID
       const messageIDContainer = document.querySelector("div.adn.ads");
-      const messageID = messageIDContainer ? messageIDContainer.getAttribute('data-legacy-message-id') : null;
-
 
       if (messageIDContainer && !messageIDContainer.dataset.processed) {
-        messageIDContainer.dataset.processed = "true"; // Evita doppie elaborazioni
-        console.log(messageID);
+        messageIDContainer.dataset.processed = "true"; // Mark as processed
+        const messageID = messageIDContainer.getAttribute('data-legacy-message-id');
 
-        // Controllo che Delphi sia in esecuzione attraverso l'analisi di oauth_status
+        // Check if the extension is authenticated before proceeding
         const isRunning = await isDelphiRunning();
         if (isRunning) {
-
-          // Controllo se la classificazione è già presente in cache
-          chrome.storage.local.get(messageID, (result) => {
-            console.log(result[messageID] || []);
-            if (result[messageID]) {
-              showResult(result[messageID]);
-            }
-            else {
-              startClassification();
-            }
-          });
-
-
-          function startClassification() {
-            chrome.runtime.sendMessage({ action: "sendMessageID", data: messageID },
-              function (response) {
-                console.log(response.result);
-                showResult(response.result);
-              });
-          }
-
-          function showResult(result) {
-            const label = document.createElement('span');
-            if (result.classification_result == "legit") {
-              console.log(result.classification_result);
-              label.style.background = "#ecfcca";
-              label.style.padding = "10px";
-              label.style.color = "#35530e";
-              label.style.textAlign = "center";
-              label.textContent = 'legit';
-              label.style.marginLeft = '8px';
-
-              document.querySelector(".go").appendChild(label);
-
-            }
-            else {
-              console.log(result.classification_result);
-              label.style.background = "#ffc9c9";
-              label.style.padding = "10px";
-              label.style.color = "#82181a";
-              label.style.textAlign = "center";
-              label.textContent = 'phishing';
-              label.style.fontWeight = "bold";
-              label.style.marginLeft = '8px';
-
-              document.querySelector(".go").appendChild(label);
-              attachPhishingProtection(result.feature_explain, result.phishing_probability);
-            }
-          }
+            // Check if this email is already in the local cache
+            chrome.storage.local.get(messageID, (cacheEntry) => {
+                if (cacheEntry[messageID]) {
+                    // Found in cache, display immediately
+                    showResult(cacheEntry[messageID]);
+                } else {
+                    // Not in cache, start API classification
+                    startClassification(messageID);
+                }
+            });
         }
       }
     }
   }
 });
 
-
-// Avvia l'osservatore sull'intera pagina
+// Start observing the entire page for changes
 observer.observe(document.body, {
   childList: true,
   subtree: true
 });
 
-
-// Ascolta i messaggi provenienti dal background script
+// Listens for specific requests from the Service Worker (e.g., on tab switch)
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-
   if (request.action === "getGmailAccount") {
-    console.log("Content Script: Ricevuto ordine di rilettura DOM.");
-
-    const gmail_account = getGmailAccountFromTab();
-    sendResponse({
-      gmail_account
-    });
-
-    // Non è necessario return true qui se sendResponse viene chiamato in modo sincrono.
+    const gmailAccount = getGmailAccountFromTab();
+    sendResponse({ gmailAccount });
   }
 });
+
+/**
+ * Helper function to get the current Gmail account from the page's metadata.
+ * @returns {string} The email address.
+ */
+function getGmailAccountFromTab() {
+  const meta = document.getElementsByTagName("meta")[0];
+  return meta.content;
+}

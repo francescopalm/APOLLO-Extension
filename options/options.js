@@ -72,14 +72,14 @@ const restoreOptions = () => {
 const clearCache = async () => {
     try {
         await chrome.storage.local.clear();
-        console.log("Cache ripulita con successo.");
+        console.log("Cache succesfully cleared.");
         const status = document.getElementById('status');
         status.textContent = 'Cache cleared.';
         setTimeout(() => {
           status.textContent = '';
         }, 5000);
     } catch (error) {
-        console.error("Errore durante la pulizia della cache:", error);
+        console.error("Error during cache cleaning: ", error);
     }
 };
 

@@ -1,8 +1,7 @@
-/* Stile base e font */
+/* Base styles and typography */
 body {
-    /* 3. Use Roboto Font */
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f7f6; /* Very light background */
+    background-color: #f4f7f6;
     color: #333;
     padding: 20px;
     margin: 0;
@@ -14,15 +13,15 @@ body {
     margin: 0 auto;
 }
 
-/* --- Header and Titles --- */
+/* Header and titles */
 .header {
     text-align: center;
     margin-bottom: 30px;
 }
 
 .header h1 {
-    color: #4A90E2; /* Primary blue color */
-    font-weight: 700; /* Heavier weight for title */
+    color: #4A90E2;
+    font-weight: 700;
     margin: 0 0 5px 0;
 }
 
@@ -34,16 +33,16 @@ h2 {
     margin-bottom: 15px;
 }
 
-/* --- Sections (Card) --- */
+/* Section cards */
 .section-card {
     background-color: #ffffff;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Light shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-/* --- Form Fields --- */
+/* Form fields */
 .form-group {
     margin-bottom: 15px;
 }
@@ -64,7 +63,7 @@ label {
     border-radius: 4px;
     box-sizing: border-box; 
     font-size: 1em;
-    font-family: inherit; /* Inherit Roboto */
+    font-family: inherit;
     transition: border-color 0.3s;
 }
 
@@ -75,7 +74,7 @@ label {
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
-/* --- Inline Groups (for side-by-side selects) --- */
+/* Inline form groups for side-by-side selects */
 .form-group-inline {
     display: flex;
     gap: 20px; 
@@ -86,7 +85,7 @@ label {
     flex: 1; 
 }
 
-/* --- Buttons --- */
+/* Buttons */
 .btn {
     padding: 10px 15px;
     border: none;
@@ -95,7 +94,6 @@ label {
     cursor: pointer;
     margin-top: 5px;
     margin-right: 10px;
-    /* 4. Removed transition for hover speed */
 }
 
 .btn:last-child {
@@ -120,7 +118,7 @@ label {
     background-color: #ccc;
 }
 
-/* --- Status Messages --- */
+/* Status messages */
 .status-message {
     padding: 10px;
     margin-bottom: 15px;

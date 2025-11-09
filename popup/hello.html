@@ -1,10 +1,15 @@
-<html>
+<!DOCTYPE html>
+<html lang="it">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Popup Estensione</title>
 </head>
 
 <body>
+
   <div id="container">
     <div id="option-container">
       <button id="options">
@@ -14,15 +19,13 @@
         </svg>
       </button>
     </div>
-    <img src="../images/logo.png" style="max-width:150px; margin-top:-20px"></img>
+    
+    <img id="logo-img" src="../images/logo.png" alt="Logo">
 
-    <!--<script type="text/javascript" src="../scripts/oauth.js"></script>-->
-    <script type="text/javascript" src="../scripts/batch.js"></script>
     <span id="account" style="border:1px solid grey; border-radius:12px; padding: 5px 10px; font-weight: bold;">Not
       logged</span>
     <span id="details"></span>
 
-    <!-- Sign in with Google button-->
     <div id="google-login-container">
       <button id="login" class="google-sign-in-button">
         <span class="icon-container">
@@ -31,8 +34,11 @@
         <span class="button-text">Sign in with Google</span>
       </button>
     </div>
-    
-    <button id="classification">Start batch classification</button>
+
+    <button id="classification">
+      <span class="button-text">Start batch classification</span>
+      <span class="spinner"></span>
+    </button>
 
     <div id="signout-container">
       <button id="signout">
@@ -52,9 +58,8 @@
       </button>
     </div>
 
-        
-
   </div>
+
 
   <script src="../scripts/popup.js" type="module"></script>
 
