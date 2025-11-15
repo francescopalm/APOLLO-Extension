@@ -165,6 +165,9 @@ function injectStyles() {
             color: #fff;
             background-color: transparent;
         }
+        .phishing-medium-risk:hover {
+            cursor: not-allowed;
+        }
         .phishing-medium-risk:active {
             pointer-events: none;
         }
