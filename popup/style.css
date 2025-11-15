@@ -1,204 +1,389 @@
 :root {
-    /* Font */
-    --font-primary: 'Roboto', sans-serif;
-
-    /* Main Colors */
-    --color-text: #3C4043;
-    --color-background: #FFFFFF;
-    --color-background-hover: #fafafa;
-    --color-border: #DADCE0;
-
-    /* Secondary Colors */
-    --color-icon: #a1a1a1;
-    --color-icon-hover: #525252;
-
-    /* Logout Colors */
-    --color-danger: #c10007;
-    --color-danger-background-hover: #ffe2e2;
-    --color-danger-light: #fef2f2;
-
+    /* Typography */
+    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    
+    /* Colors - Neutral */
+    --color-white: #ffffff;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+    
+    /* Colors - Brand */
+    --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
+    --color-primary-light: #dbeafe;
+    
+    /* Colors - Status */
+    --color-success: #10b981;
+    --color-success-light: #d1fae5;
+    --color-warning: #f59e0b;
+    --color-warning-light: #fef3c7;
+    --color-danger: #ef4444;
+    --color-danger-light: #fee2e2;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    /* Transitions */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
-/* Set box-sizing for all elements */
+/* Reset & Base */
 *, *::before, *::after {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     font-family: var(--font-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-white);
+    margin: 0;
+    padding: 0;
 }
 
+/* Container */
 #container {
+    width: 320px;
+    padding: 20px;
+    background: var(--color-white);
     display: flex;
     flex-direction: column;
-    width: 260px;
-    height: 100%;
+    gap: 16px;
+    /* Remove animation to prevent flickering on load */
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.popup-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: -8px;
+}
+
+.icon-button {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
     align-items: center;
     justify-content: center;
+    transition: background-color var(--transition-fast);
+    color: var(--color-gray-500);
+}
+
+.icon-button:hover {
+    background: var(--color-gray-100);
+    color: var(--color-gray-700);
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+.icon-button svg {
+    fill: currentColor;
+    transition: fill var(--transition-fast);
+}
+
+/* Logo Section */
+.logo-section {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0 16px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#logo-img {
+    max-width: 140px;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Status Card */
+.status-card {
+    background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-white) 100%);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all var(--transition-base);
+    min-height: 80px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 24px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    min-height: 10px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-300);
+    flex-shrink: 0;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.status-dot.active {
+    background: var(--color-success);
+}
+
+.status-dot.warning {
+    background: var(--color-warning);
+}
+
+.status-dot.error {
+    background: var(--color-danger);
+}
+
+.account-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.status-details {
+    font-size: 12px;
+    color: var(--color-gray-600);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Actions Section */
+.actions-section {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
 }
 
-#details {
-    padding: 0 10px;
-}
-
-
-#logo-img {
-    max-width: 150px;
-}
-
-
-#option-container {
-    align-self: flex-end;
-    margin: 10px 5px 0 0;
-}
-
-#options {
-    background: none;
+/* Buttons Base */
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 16px;
     border: none;
-    cursor: pointer;
-}
-
-#options svg {
-    fill: var(--color-icon);
-}
-
-#options:hover svg {
-    fill: var(--color-icon-hover);
-}
-
-
-
-.google-sign-in-button {
-    display: flex;
-    align-items: center;
-    justify-content: space-around; 
-
-    width: 100%; 
-    height: 40px; 
-    background-color: var(--color-background);
-    color: var(--color-text);
+    border-radius: var(--radius);
     font-family: var(--font-primary);
     font-size: 14px;
     font-weight: 500;
-    
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.04);
     cursor: pointer;
-    
-    padding: 0;
-    margin: 10px 0;
-}
-
-.google-sign-in-button:hover {
-    background-color: var(--color-background-hover);
-}
-
-.icon-container {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px; 
-    height: 100%;
-}
-
-.google-logo-icon {
-    width: 18px;
-    height: 18px; 
-    vertical-align: middle;
-}
-
-.button-text {
-    flex-grow: 1; 
-    text-align: left;
-    padding-right: 11px;
-}
-
-#signout {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 100%;
-    height: 40px; 
-    background-color: var(--color-danger-light);
-    color: var(--color-danger);
-    font-family: var(--font-primary);
-    font-size: 13px;
-    font-weight: 400;
-    
-    border: 1px solid var(--color-danger-light);
-    border-radius: 8px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.04);
-    cursor: pointer;
-    
-    padding: 0;
-    margin: 10px 0;
-}
-
-#signout:hover {
-    background-color: var(--color-danger-background-hover);
-    border: 1px solid var(--color-danger-background-hover);
-}
-
-
-#signout .button-text {
-    text-align: center;
-    padding-right: 11px;
-}
-
-
-#classification {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: all var(--transition-base);
     position: relative;
-
-    width: 80%;
-    height: 40px;
-    background-color: var(--color-background);
-    color: var(--color-text);
-    font-family: var(--font-primary);
-    font-size: 14px;
-    font-weight: 500;
-    
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.04);
-    cursor: pointer;
-    
-    padding: 10px;
-    margin: 10px 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
 }
 
-#classification:hover {
-    background-color: var(--color-background-hover);
+.btn:active {
+    transform: translateY(1px);
 }
 
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
 
-#classification .button-text {
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.btn-text {
+    flex: 1;
     text-align: center;
-    padding-right: 0;
 }
 
+/* Button Variants */
+.btn-google {
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+}
 
-/* --- Spinner --- */
+.btn-google:hover:not(:disabled) {
+    background: var(--color-gray-50);
+    border-color: var(--color-gray-400);
+    box-shadow: var(--shadow);
+}
+
+.google-logo {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-primary {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border: 1px solid transparent;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary.loading .btn-text,
+.btn-primary.loading .classification-icon {
+    opacity: 0;
+}
+
+.btn-primary.loading .spinner {
+    display: block;
+}
+
+.btn-danger {
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger-light);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: var(--color-danger);
+    color: var(--color-white);
+    border-color: var(--color-danger);
+}
+
+/* Spinner */
 .spinner {
-  display: none;
-  width: 18px;
-  height: 18px;
-  border: 3px solid rgba(60, 64, 67, 0.1); /* 10% of --color-text */
-  border-radius: 50%;
-  border-top-color: var(--color-text);
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-full);
+    border-top-color: var(--color-white);
+    animation: spin 0.8s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 @keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
-@-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+
+/* Footer */
+.popup-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.footer-text {
+    font-size: 11px;
+    color: var(--color-gray-500);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Accessibility - Focus States */
+.btn:focus-visible,
+.icon-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Utility - Hidden (default state for dynamic elements) */
+.hidden {
+    display: none !important;
+}
+
+/* Default hidden state for elements shown conditionally */
+#login,
+#signout,
+#classification {
+    display: none !important;
+}
+
+#login.show,
+#signout.show,
+#classification.show {
+    display: flex !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 340px) {
+    #container {
+        width: 280px;
+        padding: 16px;
+    }
+    
+    .btn {
+        font-size: 13px;
+        padding: 10px 14px;
+    }
 }
