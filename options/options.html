@@ -1,85 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>Apollo - Options</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="options.css"> </head>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APOLLO - Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="options.css">
+</head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1>APOLLO</h1>
-            <h2>Advanced Phishing preventiOn with Large Language model-based Oracle</h2>
-            <p>Configure your API keys and classification preferences.</p>
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <img src="../images/logo.png" alt="APOLLO Logo" class="header-logo">
+                </div>
+                <h1 class="page-title">APOLLO Settings</h1>
+                <p class="page-subtitle">Advanced Phishing preventiOn with Large Language model-based Oracle</p>
+            </div>
         </header>
 
-        <section class="section-card">
-            <h2>Service Keys</h2>
-            
-            <div class="form-group">
-                <label for="openai-apikey">OPENAI API Key</label>
-                <input id="openai-apikey" class="input-field" placeholder="Insert your OPENAI API key">
-            </div>
-
-            <div class="form-group">
-                <label for="vt-apikey">Virus Total API Key</label>
-                <input id="vt-apikey" class="input-field" placeholder="Insert your Virus Total API key">
-            </div>
-
-            <div class="form-group">
-                <label for="bd-apikey">Big Data Cloud API Key</label>
-                <input id="bd-apikey" class="input-field" placeholder="Insert your Big Data Cloud API key">
-            </div>
-            
-            <div id="status" class="status-message"></div>
-            
-            <button id="send" class="btn btn-primary">Test and Set Keys</button>
-        </section>
-
-        <section class="section-card">
-            <h2>Classification Preferences</h2>
-
-            <div class="form-group-inline">
-                <div class="input-group">
-                    <label for="time-window">Batch mail classification time window</label>
-                    <select name="time-window" id="time-window" class="select-field">
-                        <option value="1">1 day</option>
-                        <option value="2">2 days</option>
-                        <option value="3">3 days</option>
-                        <option value="4">4 days</option>
-                        <option value="5">5 days</option>
-                        <option value="6">6 days</option>
-                        <option value="7">7 days</option>
-                        <option value="8">8 days</option>
-                        <option value="9">9 days</option>
-                        <option value="10">10 days</option>
-                        <option value="11">11 days</option>
-                        <option value="12">12 days</option>
-                        <option value="13">13 days</option>
-                        <option value="14">14 days</option>
-                    </select>
+        <!-- API Keys Section -->
+        <section class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 2V4M12 10V12M7.75736 4.75736L9.17157 6.17157M14.8284 6.17157L16.2426 4.75736M4 12H6M18 12H20M6.17157 14.8284L7.75736 16.4142M16.2426 16.4142L17.8284 14.8284" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M7 14L5 16L4 22L10 21L12 19M17 14L19 16L20 22L14 21L12 19M12 19V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
-
-                <div class="input-group">
-                    <label for="max-results">Max results</label>
-                    <select name="max-results" id="max-results" class="select-field">
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                        <option value="40">40</option>
-                        <option value="50">50</option>
-                    </select>
+                <div class="card-title-group">
+                    <h2 class="card-title">API Configuration</h2>
+                    <p class="card-description">Configure your service API keys for phishing detection</p>
                 </div>
             </div>
             
-            <button id="save" class="btn btn-primary">Save Settings</button>
-            <button id="clear-cache" class="btn btn-secondary">Clear Classification Cache</button>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="openai-apikey" class="form-label">
+                        OpenAI API Key
+                        <span class="label-badge">Required</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        id="openai-apikey" 
+                        class="form-input" 
+                        placeholder="sk-..."
+                        autocomplete="off"
+                    >
+                    <p class="form-hint">Used for AI-powered email content analysis</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="vt-apikey" class="form-label">
+                        VirusTotal API Key
+                        <span class="label-badge optional">Optional</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        id="vt-apikey" 
+                        class="form-input" 
+                        placeholder="Enter your VirusTotal API key"
+                        autocomplete="off"
+                    >
+                    <p class="form-hint">Scans URLs and attachments for malicious content</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="bd-apikey" class="form-label">
+                        BigDataCloud API Key
+                        <span class="label-badge optional">Optional</span>
+                    </label>
+                    <input 
+                        type="password" 
+                        id="bd-apikey" 
+                        class="form-input" 
+                        placeholder="Enter your BigDataCloud API key"
+                        autocomplete="off"
+                    >
+                    <p class="form-hint">Provides geolocation and IP reputation data</p>
+                </div>
+
+                <div id="api-status" class="status-message" role="alert"></div>
+                
+                <button id="send" class="btn btn-primary">
+                    <span class="btn-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="btn-text">Save API Keys</span>
+                    <span class="spinner"></span>
+                </button>
+            </div>
         </section>
+
+        <!-- Classification Settings -->
+        <section class="settings-card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="card-title-group">
+                    <h2 class="card-title">Classification Settings</h2>
+                    <p class="card-description">Configure batch email classification preferences</p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="time-window" class="form-label">Time Window</label>
+                        <select id="time-window" class="form-select">
+                            <option value="1">Last 1 day</option>
+                            <option value="2">Last 2 days</option>
+                            <option value="3">Last 3 days</option>
+                            <option value="4">Last 4 days</option>
+                            <option value="5">Last 5 days</option>
+                            <option value="6">Last 6 days</option>
+                            <option value="7">Last 7 days</option>
+                            <option value="8">Last 8 days</option>
+                            <option value="9">Last 9 days</option>
+                            <option value="10">Last 10 days</option>
+                            <option value="11">Last 11 days</option>
+                            <option value="12">Last 12 days</option>
+                            <option value="13">Last 13 days</option>
+                            <option value="14">Last 14 days</option>
+                        </select>
+                        <p class="form-hint">How far back to scan for emails</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="max-results" class="form-label">Max Results</label>
+                        <select id="max-results" class="form-select">
+                            <option value="10">10 emails</option>
+                            <option value="20">20 emails</option>
+                            <option value="30">30 emails</option>
+                            <option value="40">40 emails</option>
+                            <option value="50">50 emails</option>
+                        </select>
+                        <p class="form-hint">Maximum emails to classify</p>
+                    </div>
+                </div>
+
+                <div id="settings-status" class="status-message" role="alert"></div>
+
+                <button id="save" class="btn btn-primary">
+                    <span class="btn-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16L21 8V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 3V8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="btn-text">Save Settings</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Cache Management -->
+        <section class="settings-card">
+            <div class="card-header">
+                <div class="card-icon danger">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6H21M19 6V20C19 21.1046 18.1046 22 17 22H7C5.89543 22 5 21.1046 5 20V6M8 6V4C8 2.89543 8.89543 2 10 2H14C15.1046 2 16 2.89543 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 11V17M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="card-title-group">
+                    <h2 class="card-title">Cache Management</h2>
+                    <p class="card-description">Clear stored email classification data</p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="warning-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p>This will permanently delete all cached email classifications. Previously analyzed emails will need to be re-scanned.</p>
+                </div>
+
+                <div id="cache-status" class="status-message" role="alert"></div>
+
+                <button id="clear-cache" class="btn btn-danger">
+                    <span class="btn-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 6H21M19 6V20C19 21.1046 18.1046 22 17 22H7C5.89543 22 5 21.1046 5 20V6M8 6V4C8 2.89543 8.89543 2 10 2H14C15.1046 2 16 2.89543 16 4V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                    <span class="btn-text">Clear Cache</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="page-footer">
+            <p class="footer-text">APOLLO - Phishing Alert v1.0</p>
+        </footer>
     </div>
 
     <script src="options.js"></script>
 </body>
-
 </html>
