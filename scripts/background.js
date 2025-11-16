@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             chrome.storage.session.set({ oauth_status: oauthStatus });
             if (oauthStatus === "VALID TOKEN"){
                 const silentMode = true;
-                const batchClassification = await startClassification(silentMode);
+                await startClassification(silentMode);
             }
             sendResponse({ status: oauthStatus });
         })();
@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             chrome.storage.session.set({ oauth_status: oauthStatus });
             if (oauthStatus === "VALID TOKEN"){
                 const silentMode = true;
-                const batchClassification = await startClassification(silentMode);
+                await startClassification(silentMode);
             }
             sendResponse({ status: oauthStatus });
         })();
@@ -75,6 +75,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 const gmailResponse = await fetch(gmailApiUrl, {
                     headers: { Authorization: "Bearer " + google_auth_token }
                 });
+
 
                 // Error handling for the fetch response
                 if (!gmailResponse.ok) {
