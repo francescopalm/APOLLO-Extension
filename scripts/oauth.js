@@ -17,15 +17,21 @@ export async function checkOAuth() {
         });
 
         if (response.ok) {
-            // 3. Token is valid. Check if it matches the active Gmail account.
+            // 3. Token is valid.
+            // Check if it matches the active Gmail account and if the OPENAI API KEY is set.
             const userInfo = await response.json();
             const { gmailAccount } = await chrome.storage.session.get('gmailAccount');
+            const { openaiApiKey } = await chrome.storage.sync.get('openaiApiKey');
             
             // Store the user info email for reference (e.g., for tab switching logic)
             chrome.storage.session.set({ userInfo: userInfo.email });
 
             if (gmailAccount === userInfo.email) {
-                return "VALID TOKEN";
+                if(openaiApiKey) {
+                    return "VALID TOKEN";
+                } else {
+                    return "API KEY MISSING";
+                }
             } else {
                 console.warn("Token account does not match active Gmail account.");
                 return "MAIL ACCOUNT MISMATCH";
