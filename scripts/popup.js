@@ -8,7 +8,8 @@ const OAUTH_STATUS = {
     VALID_TOKEN: "VALID TOKEN",
     MAIL_MISMATCH: "MAIL ACCOUNT MISMATCH",
     TOKEN_EXPIRED: "TOKEN EXPIRED",
-    NO_TOKEN: "NO TOKEN"
+    NO_TOKEN: "NO TOKEN",
+    API_KEY_MISSING: "API KEY MISSING"
 };
 
 /**
@@ -38,6 +39,12 @@ const UI_STATES = {
         message: 'Sign in with your Google account to start protecting your inbox.',
         hideElements: ['classification', 'signout'],
         showElements: ['login']
+    },
+    [OAUTH_STATUS.API_KEY_MISSING]: {
+        statusDot: 'warning',
+        message: 'APOLLO cannot be used because the OpenAI API key is not set. Please configure it in the settings.',
+        hideElements: ['login', 'classification'],
+        showElements: ['signout']
     }
 };
 
