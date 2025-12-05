@@ -32,7 +32,7 @@ APOLLO operates on the following architecture to bridge the gap between the brow
 
 * **Author:** Francesco Palmisano.
 * **Thesis Advisors:** Prof. Giuseppe Desolda, Prof. Francesco Greco.
-* **Base Project:** [APOLLO](https://github.com/IVU-Laboratory/APOLLO).
+* **Base Project:** [APOLLO](https://github.com/francescopalm/APOLLO).
 
 
 
